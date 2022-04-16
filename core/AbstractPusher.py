@@ -5,31 +5,34 @@
 """
 from core.ConfigParser import ConfigParser
 from core.MarkdownParser import MarkdownParser
-import core.zhihu.Pusher
+import core.jianshu.Pusher as JianshuPusher
+import core.zhihu.Pusher as ZhihuPusher
 
 
 class AbstractPusher:
 
     # 博客发布核心入口
-    def push(self):
+    def push(self, path):
         # 获取要发布的markdown文件, 并解析处理
-        markdownParser = MarkdownParser()
-        markdownDict = markdownParser.parse("test.md")
+        markdownDict = MarkdownParser().parse(path)
 
         # 解析conf获取登录信息,遍历发布, 如zhihu.json, 处理ENABLE==true的
-        configParser = ConfigParser()
         # 返回所有网站配置信息
-        allConfig = configParser.trans()
+        allConfig = ConfigParser().trans()
 
         # 发布, 遍历返回的key信息, key作为目录名称,分别去各个目录找到处理方式
-        for config in allConfig:
+        for item in allConfig.items():
+            print('item中key %s value %s' % (item[0], item[1]))
             # key, 根据key找到目录下的Pusher作为入口, 没有反射只能判断了
-            if config == "zhihu":
-                core.zhihu.Pusher().pushExt("config", markdownDict)
-            elif config == "cnblog":
-                core.cnblog.Pusher().pushExt("config", markdownDict)
+            if item[0] == "zhihu":
+                ZhihuPusher.Pusher().pushExt(item[1], markdownDict)
+            elif item[0] == "cnblog":
+                # CnblogPusher().pushExt(item[1], markdownDict)
+                pass
+            elif item[0] == "jianshu":
+                JianshuPusher.Pusher().pushExt(item[1], markdownDict)
             else:
-                print("暂不支持", config)
+                print("暂不支持", item[0])
 
     # 扩展实现该方法
     def pushExt(self):

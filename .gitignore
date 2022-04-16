@@ -6,3 +6,8 @@
 #*.txt
 
 /.idea/
+/__pycache__/
+
+/cookie/*.json
+
+*.log
