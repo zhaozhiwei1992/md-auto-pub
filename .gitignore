@@ -11,3 +11,4 @@
 /cookie/*.json
 
 *.log
+*.pyc
