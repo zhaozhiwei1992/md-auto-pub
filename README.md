@@ -59,10 +59,6 @@ pip install -r requirements.txt
 
 **注: 调整各个Pusher中的坐标** python Main.py xx.md
 
-## 使用pyinstaller对程序进行打包
-
-pyinstaller -i xxx.ico -n xxx -w -D tkmain.py
-
 # 平台支持
 
 - [x] 博客园 
