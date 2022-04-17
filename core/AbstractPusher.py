@@ -7,6 +7,8 @@ from core.ConfigParser import ConfigParser
 from core.MarkdownParser import MarkdownParser
 import core.jianshu.Pusher as JianshuPusher
 import core.zhihu.Pusher as ZhihuPusher
+import core.cnblog.Pusher as CnblogPusher
+import importlib
 
 
 class AbstractPusher:
@@ -23,16 +25,23 @@ class AbstractPusher:
         # 发布, 遍历返回的key信息, key作为目录名称,分别去各个目录找到处理方式
         for item in allConfig.items():
             print('item中key %s value %s' % (item[0], item[1]))
+
             # key, 根据key找到目录下的Pusher作为入口, 没有反射只能判断了
-            if item[0] == "zhihu":
-                ZhihuPusher.Pusher().pushExt(item[1], markdownDict)
-            elif item[0] == "cnblog":
-                # CnblogPusher().pushExt(item[1], markdownDict)
-                pass
-            elif item[0] == "jianshu":
-                JianshuPusher.Pusher().pushExt(item[1], markdownDict)
-            else:
-                print("暂不支持", item[0])
+            # if item[0] == "zhihu":
+            #     ZhihuPusher.Pusher().pushExt(item[1], markdownDict)
+            # elif item[0] == "cnblog":
+            #     CnblogPusher.Pusher().pushExt(item[1], markdownDict)
+            # elif item[0] == "jianshu":
+            #     JianshuPusher.Pusher().pushExt(item[1], markdownDict)
+            # else:
+            #     print("暂不支持", item[0])
+
+            # 动态导入
+            moduleSrc = "core." + item[0] + ".Pusher"
+            # 动态导入模块，此时，lib就相当于core.jianshu.Pusher
+            lib = importlib.import_module(moduleSrc)
+            # 动态导入函数
+            lib.Pusher().pushExt(item[1], markdownDict)
 
     # 扩展实现该方法
     def pushExt(self):
@@ -44,15 +53,9 @@ class AbstractPusher:
         self.write()
         self.submit()
 
-    # 1. 登录
-    def login(self):
+    # 登录并跳转
+    def loginAndForward(self, driver, url):
         pass
 
-    def forward(self):
-        pass
-
-    def write(self):
-        pass
-
-    def submit(self):
+    def write(self, config, markdownProperties):
         pass

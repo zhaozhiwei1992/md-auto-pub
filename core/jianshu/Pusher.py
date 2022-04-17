@@ -17,7 +17,9 @@ class Pusher:
         self.loginAndForward(driver, config.get("URL"))
         self.write(config, markdownProperties)
         # 关掉浏览器
-        driver.close()
+        time.sleep(20)
+        # driver.close()
+        pyautogui.hotkey('alt', 'f4')
 
     def loginAndForward(self, driver, url):
 
