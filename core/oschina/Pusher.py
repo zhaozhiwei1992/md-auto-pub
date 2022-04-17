@@ -16,10 +16,9 @@ class Pusher:
         driver = webdriver.Firefox()
         self.loginAndForward(driver, config.get("URL"))
         self.write(config, markdownProperties)
-        # 关掉浏览器
+        # 关掉浏览器 20s后
         time.sleep(20)
-        # driver.close()
-        pyautogui.hotkey('alt', 'f4')
+        driver.close()
         time.sleep(10)
 
     def loginAndForward(self, driver, url):
@@ -27,18 +26,17 @@ class Pusher:
         curPath = os.path.abspath(os.path.dirname(__file__))
         # MdAutoPub，也就是项目的根路径
         rootPath = curPath[:curPath.find("MdAutoPub/") + len("MdAutoPub/")]
-        cookiePath = os.path.abspath(rootPath + 'cookie/jianshu_cookie.json')
+        cookiePath = os.path.abspath(rootPath + 'cookie/oschina_cookie.json')
 
         # 如果文件不存在则先登录
         if not os.path.exists(cookiePath):
             driver.maximize_window()
             driver.get(url)
 
-            # 睡30秒等你登录
+            # 睡一份中等你登录
             time.sleep(30)
 
             dictCookies = driver.get_cookies()
-            # todo 未登录跳过后续操作
             jsonCookies = json.dumps(dictCookies)
             # print(jsonCookies)
             with open(cookiePath, 'w') as f:
@@ -56,45 +54,33 @@ class Pusher:
             driver.get(url)
 
     # 录入内容,
+    # 这部分根据实际情况调整坐标
     def write(self, config, markdownProperties):
-        curPath = os.path.abspath(os.path.dirname(__file__))
-        # MdAutoPub，也就是项目的根路径
-        rootPath = curPath[:curPath.find("MdAutoPub/") + len("MdAutoPub/")]
-        positionPath = os.path.abspath(rootPath + 'position/jianshu/')
-        # 跳转到文章写入界面
-        # writeLocation = pyautogui.locateOnScreen(positionPath + "/img_1.png")  # 传入按钮的图片
-        # print("写文章按钮坐标: ", writeLocation)
-        # 转化为 x,y坐标
-        # x, y = pyautogui.center(writeLocation)
         time.sleep(3)
-        # 鼠标左击一下 x表横坐标， y表示纵坐标 单位像素， button=left 表示左键
-        pyautogui.click(x=1437, y=151, button='left')
-        # pyautogui.click(writeLocation)
-
-        # 新建文章
-        time.sleep(3)
-        pyautogui.click(x=365, y=159, button='left')
+        # 写博客 1027, 211
+        pyautogui.click(x=1027, y=211, button='left')
 
         # 通过pyautogui 定位到标题, 写入内容
-        # 删除Backspace
         time.sleep(3)
         pyperclip.copy(markdownProperties['title'])
-        time.sleep(2)
-        # pyperclip.paste()
 
-        # 千万不要用typewrite输入大片文章。。
-        # pyautogui.typewrite(markdownProperties['title'])
+        time.sleep(2)
         pyautogui.hotkey('ctrl', 'v')
 
-        # tab键到内容
-        time.sleep(3)
-        pyautogui.press("tab")
+        # 切换为markdown模式 373, 334
+        time.sleep(2)
+        pyautogui.click(x=373, y=334, button='left')
+
         # 通过pyautogui 定位到内容区, 写入内容
-        time.sleep(1)
+        time.sleep(2)
         pyperclip.copy(markdownProperties['content'])
         time.sleep(3)
-        # pyperclip.paste()
         pyautogui.hotkey('ctrl', 'v')
 
         # 通过pyautogui获取到提交按钮, 点击发布
-        # pyautogui.click(x=365, y=159, button='left')
+        time.sleep(3)
+        # 发布文章 1303, 424
+        pyautogui.click(x=1303, y=424, button='left')
+        # 确认发布 1295, 507
+        time.sleep(3)
+        pyautogui.click(x=1295, y=507, button='left')

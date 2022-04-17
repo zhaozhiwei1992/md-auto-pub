@@ -1,7 +1,3 @@
----
-title: markdown多平台自动发布
----
-
 # 简介
 
 MdAutoPub：文章多平台发布小工具，主要使用selenium,autogui实现
@@ -11,6 +7,7 @@ MdAutoPub：文章多平台发布小工具，主要使用selenium,autogui实现
 ## 登录
 
 通过selenium进行平台登录, 登录后保留cookie下次使用
+随便使用自己的登录方式，但是登录时间只有30秒哦, 加油
 
 ## 代码设计
 
@@ -20,7 +17,8 @@ MdAutoPub：文章多平台发布小工具，主要使用selenium,autogui实现
 所以直接用autogui配合更靠谱,
 使用selenium与autogui进行MarkDown文章的格式化与发布
 
-这里目前直接采用坐标的方式操作，测试使用图标定位方式不准确
+这里目前直接采用 **坐标** 的方式操作，测试使用图标定位方式不准确,
+所以，实际使用过程中需要自己调整坐标, 主要就是各个Pusher中的write方法
 
 # 编写MarkDown
 
@@ -52,9 +50,13 @@ pip install -r requirements.txt
 
 其他平台类似
 
-## 使用
+## 博客markdown文件
 
-python Main.py
+将自己的博客md文件放入到项目markdown目录下
+
+## 运行
+
+**注: 调整各个Pusher中的坐标** python Main.py xx.md
 
 ## 使用pyinstaller对程序进行打包
 
@@ -62,33 +64,33 @@ pyinstaller -i xxx.ico -n xxx -w -D tkmain.py
 
 # 平台支持
 
-## [DONE]{.todo .DONE} 博客园 {#博客园}
+- [x] 博客园 
 
-## [DONE]{.done .DONE} 简书 {#简书}
+- [x] 简书 
 
-## [TODO]{.todo .TODO} 知乎 {#知乎}
+- [ ] 知乎 
 
-## [TODO]{.todo .TODO} CSDN {#csdn}
+- [ ] CSDN 
 
-## [TODO]{.todo .TODO} 豆瓣日志 {#豆瓣日志}
+- [ ] 豆瓣日志 
 
-## [TODO]{.todo .TODO} segmentfault {#segmentfault}
+- [ ] segmentfault 
 
-## [TODO]{.todo .TODO} 开源中国 {#开源中国}
+- [x] 开源中国 
 
-## [TODO]{.todo .TODO} 掘金 {#掘金}
+- [x] 掘金 
 
-## [TODO]{.todo .TODO} 今日头条 {#今日头条}
+- [ ] 今日头条 
 
-## [TODO]{.todo .TODO} 微博 {#微博}
+- [ ] 微博 
 
-## [TODO]{.todo .TODO} 百度百家号 {#百度百家号}
+- [ ] 百度百家号 
 
-## [TODO]{.todo .TODO} 51CTO {#cto}
+- [ ] 51CTO 
 
-## [TODO]{.todo .TODO} 开发者头条 {#开发者头条}
+- [ ] 开发者头条 
 
-## [TODO]{.todo .TODO} 微信公众号 {#微信公众号}
+- [ ] 微信公众号 
 
 # 代码结构
 
@@ -113,6 +115,8 @@ core目录下增加同名目录如cnblog, 同时增加文件Pusher.py
 ## [AUTOPUBLISH](https://gitee.com/mirrors/AutoPublish)
 
 ## [现有工具-ArtiPub](https://github.com/crawlab-team/artipub)
+
+## [我自己](https://gitee.com/zhaozhiwei_1992/md-auto-pub)
 
 # 问题列表
 
