@@ -7,6 +7,7 @@ MdAutoPub：文章多平台发布小工具，主要使用selenium,autogui实现
 ## 登录
 
 通过selenium进行平台登录, 登录后保留cookie下次使用
+
 随便使用自己的登录方式，但是登录时间只有30秒哦, 加油
 
 ## 代码设计
