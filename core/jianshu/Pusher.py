@@ -52,15 +52,15 @@ class Pusher:
             for cookie in cookies:
                 driver.add_cookie(cookie)
                 # print(cookie)
-            # 用保存的cookie访问豆瓣
+            # 用保存的cookie访问
             driver.get(url)
 
     # 录入内容,
     def write(self, config, markdownProperties):
-        curPath = os.path.abspath(os.path.dirname(__file__))
+        # curPath = os.path.abspath(os.path.dirname(__file__))
         # MdAutoPub，也就是项目的根路径
-        rootPath = curPath[:curPath.find("MdAutoPub/") + len("MdAutoPub/")]
-        positionPath = os.path.abspath(rootPath + 'position/jianshu/')
+        # rootPath = curPath[:curPath.find("MdAutoPub/") + len("MdAutoPub/")]
+        # positionPath = os.path.abspath(rootPath + 'position/jianshu/')
         # 跳转到文章写入界面
         # writeLocation = pyautogui.locateOnScreen(positionPath + "/img_1.png")  # 传入按钮的图片
         # print("写文章按钮坐标: ", writeLocation)
@@ -97,4 +97,4 @@ class Pusher:
         pyautogui.hotkey('ctrl', 'v')
 
         # 通过pyautogui获取到提交按钮, 点击发布
-        # pyautogui.click(x=365, y=159, button='left')
+        pyautogui.click(x=365, y=159, button='left')

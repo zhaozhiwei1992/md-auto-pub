@@ -7,7 +7,8 @@ try:
         print("按下Ctrl + C 结束程序")
         # pag.position()返回鼠标的坐标
         x, y = pyautogui.position()
-        posStr = "当前鼠标位置:" + str(x).rjust(4) + ',' + str(y).rjust(4)
+        # posStr = "当前鼠标位置:" + str(x).rjust(4) + ',' + str(y).rjust(4)
+        posStr = "当前鼠标位置: x=" + str(x) + ', y=' + str(y)
         # 打印当前鼠标位置坐标
         print(posStr)
         time.sleep(1)

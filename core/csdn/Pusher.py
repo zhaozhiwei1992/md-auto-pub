@@ -1,5 +1,5 @@
 """
-自定义博客园 pusher, 继承core.AbstractPusher
+自定义CSDN pusher
 """
 from selenium import webdriver
 import json
@@ -18,17 +18,14 @@ class Pusher:
         self.write(config, markdownProperties)
         # 关掉浏览器 20s后
         time.sleep(20)
-        # driver.close()
-        pyautogui.hotkey('alt', 'f4')
-        time.sleep(10)
+        driver.close()
 
-    @staticmethod
-    def loginAndForward(driver, url):
+    def loginAndForward(self, driver, url):
 
         curPath = os.path.abspath(os.path.dirname(__file__))
         # MdAutoPub，也就是项目的根路径
         rootPath = curPath[:curPath.find("MdAutoPub/") + len("MdAutoPub/")]
-        cookiePath = os.path.abspath(rootPath + 'cookie/juejin_cookie.json')
+        cookiePath = os.path.abspath(rootPath + 'cookie/csdn_cookie.json')
 
         # 如果文件不存在则先登录
         if not os.path.exists(cookiePath):
@@ -57,52 +54,30 @@ class Pusher:
 
     # 录入内容,
     # 这部分根据实际情况调整坐标
-    @staticmethod
-    def write(config, markdownProperties):
-        time.sleep(3)
-        # 写文章 318, 339
-        pyautogui.click(x=318, y=339, button='left')
+    def write(self, config, markdownProperties):
 
-        # 标题 176, 163
-        time.sleep(3)
-        pyautogui.click(x=176, y=163, button='left')
+        # x掉模板库弹框 x=1139, y=266
+        pyautogui.click(x=1139, y=266, button='left')
 
+        # 标题 x=317, y=156
+        time.sleep(3)
+        pyautogui.click(x=233, y=399, button='left')
         time.sleep(1)
         pyperclip.copy(markdownProperties['title'])
-
+        # 覆盖原标题
         time.sleep(2)
+        pyautogui.hotkey('ctrl', 'a')
+        time.sleep(1)
         pyautogui.hotkey('ctrl', 'v')
 
-        # 内容区 156, 289
-        # tab键到内容
+        # 内容区x=186, y=366
         time.sleep(3)
-        pyautogui.click(x=156, y=289, button='left')
-
+        pyautogui.click(x=186, y=366, button='left')
         time.sleep(1)
         pyperclip.copy(markdownProperties['content'])
         time.sleep(3)
         pyautogui.hotkey('ctrl', 'v')
 
-        # 发布按钮 1414, 162
+        # 发布文章 x=1442, y=150
         time.sleep(2)
-        pyautogui.click(x=1414, y=162, button='left')
-
-        # 分类 1081, 296
-        time.sleep(2)
-        pyautogui.click(x=1081, y=296, button='left')
-        # 添加标签 1103, 411
-        time.sleep(2)
-        pyautogui.click(x=1103, y=411, button='left')
-        # 选择标签 1052, 525
-        time.sleep(2)
-        pyautogui.click(x=1052, y=525, button='left')
-
-        # 摘要 1115, 734
-        # 默认会根据文章自动写入, 30秒内自己调整
-        time.sleep(2)
-        pyautogui.click(x=1115, y=734, button='left')
-        time.sleep(30)
-
-        # 确认发布 1411, 867
-        time.sleep(2)
-        pyautogui.click(x=1411, y=867, button='left')
+        pyautogui.click(x=1442, y=150, button='left')

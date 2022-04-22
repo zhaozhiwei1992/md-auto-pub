@@ -1,5 +1,5 @@
 """
-自定义博客园 pusher, 继承core.AbstractPusher
+思否自动提交实现
 """
 from selenium import webdriver
 import json
@@ -22,13 +22,13 @@ class Pusher:
         pyautogui.hotkey('alt', 'f4')
         time.sleep(10)
 
-    @staticmethod
-    def loginAndForward(driver, url):
+    # 登录并跳转到写入界面
+    def loginAndForward(self, driver, url):
 
         curPath = os.path.abspath(os.path.dirname(__file__))
         # MdAutoPub，也就是项目的根路径
         rootPath = curPath[:curPath.find("MdAutoPub/") + len("MdAutoPub/")]
-        cookiePath = os.path.abspath(rootPath + 'cookie/juejin_cookie.json')
+        cookiePath = os.path.abspath(rootPath + 'cookie/segmentfault_cookie.json')
 
         # 如果文件不存在则先登录
         if not os.path.exists(cookiePath):
@@ -57,52 +57,58 @@ class Pusher:
 
     # 录入内容,
     # 这部分根据实际情况调整坐标
-    @staticmethod
-    def write(config, markdownProperties):
-        time.sleep(3)
-        # 写文章 318, 339
-        pyautogui.click(x=318, y=339, button='left')
+    def write(self, config, markdownProperties):
 
-        # 标题 176, 163
+        # 撰写 x=1171, y=155
         time.sleep(3)
-        pyautogui.click(x=176, y=163, button='left')
+        pyautogui.click(x=1171, y=155, button='left')
 
-        time.sleep(1)
+        # 写文章 x=1178, y=230
+        time.sleep(3)
+        pyautogui.click(x=1178, y=230, button='left')
+
+        # 可能有弹框提示 x掉 x=1021, y=186
+        time.sleep(3)
+        pyautogui.click(x=1021, y=186, button='left')
+
+        # 标题 x=119, y=230
+        # 会自动定位
+        # time.sleep(3)
+        # pyautogui.click(x=176, y=163, button='left')
+        time.sleep(2)
         pyperclip.copy(markdownProperties['title'])
 
         time.sleep(2)
         pyautogui.hotkey('ctrl', 'v')
 
-        # 内容区 156, 289
-        # tab键到内容
+        # 添加标签 x=77, y=288
+        time.sleep(2)
+        pyautogui.click(x=77, y=288, button='left')
+        # 搜索标签 x=144, y=367
+        time.sleep(2)
+        pyautogui.click(x=144, y=367, button='left')
+        # 输入标签 回车, 每次只能录入一个
+        time.sleep(1)
+        tags = str(markdownProperties['tag'])
+        tagList = tags.split(",")
+        for tag in tagList:
+            pyperclip.copy(tag)
+            time.sleep(2)
+            pyautogui.hotkey('ctrl', 'v')
+
+        # 内容区 x=132, y=393
         time.sleep(3)
-        pyautogui.click(x=156, y=289, button='left')
+        pyautogui.click(x=132, y=393, button='left')
 
         time.sleep(1)
         pyperclip.copy(markdownProperties['content'])
         time.sleep(3)
         pyautogui.hotkey('ctrl', 'v')
 
-        # 发布按钮 1414, 162
+        # 发布文章 x=1501, y=153
         time.sleep(2)
-        pyautogui.click(x=1414, y=162, button='left')
+        pyautogui.click(x=1501, y=153, button='left')
 
-        # 分类 1081, 296
+        # 确认发布 x=1396, y=592
         time.sleep(2)
-        pyautogui.click(x=1081, y=296, button='left')
-        # 添加标签 1103, 411
-        time.sleep(2)
-        pyautogui.click(x=1103, y=411, button='left')
-        # 选择标签 1052, 525
-        time.sleep(2)
-        pyautogui.click(x=1052, y=525, button='left')
-
-        # 摘要 1115, 734
-        # 默认会根据文章自动写入, 30秒内自己调整
-        time.sleep(2)
-        pyautogui.click(x=1115, y=734, button='left')
-        time.sleep(30)
-
-        # 确认发布 1411, 867
-        time.sleep(2)
-        pyautogui.click(x=1411, y=867, button='left')
+        pyautogui.click(x=1396, y=592, button='left')

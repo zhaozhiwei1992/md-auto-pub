@@ -32,7 +32,7 @@ class Pusher:
             driver.maximize_window()
             driver.get(url)
 
-            # 睡一份中等你登录
+            # 睡30秒等你登录
             time.sleep(30)
 
             dictCookies = driver.get_cookies()
@@ -49,7 +49,7 @@ class Pusher:
             for cookie in cookies:
                 driver.add_cookie(cookie)
                 # print(cookie)
-            # 用保存的cookie访问豆瓣
+            # 用保存的cookie访问
             driver.get(url)
 
     # 录入内容,
@@ -98,4 +98,4 @@ class Pusher:
 
         # 通过pyautogui获取到提交按钮, 点击发布
         time.sleep(2)
-        # pyautogui.click(x=217, y=791, button='left')
+        pyautogui.click(x=217, y=791, button='left')

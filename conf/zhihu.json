@@ -1,4 +1,5 @@
 {
   "ENABLE":false,
-  "URL":"https://zhuanlan.zhihu.com/write"
+  "URL":"https://zhuanlan.zhihu.com/write",
+  "TRANS_MD": "https://md.phodal.com/"
 }
