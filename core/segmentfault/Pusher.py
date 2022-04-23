@@ -89,16 +89,22 @@ class Pusher:
         pyautogui.click(x=144, y=367, button='left')
         # 输入标签 回车, 每次只能录入一个
         time.sleep(1)
-        tags = str(markdownProperties['tag'])
-        tagList = tags.split(",")
-        for tag in tagList:
-            pyperclip.copy(tag)
-            time.sleep(2)
-            pyautogui.hotkey('ctrl', 'v')
+        # tags = str(markdownProperties['tag'])
+        # tagList = tags.split(",")
+        # for tag in tagList:
+        #     pyperclip.copy(tag)
+        #     time.sleep(2)
+        #     pyautogui.hotkey('ctrl', 'v')
+        # 标签不存在无法添加,随意指定其他
+        pyperclip.copy("其他")
+        time.sleep(2)
+        pyautogui.hotkey('ctrl', 'v')
+        time.sleep(2)
+        pyautogui.hotkey('enter')
 
-        # 内容区 x=132, y=393
+        # 内容区 x=339, y=689
         time.sleep(3)
-        pyautogui.click(x=132, y=393, button='left')
+        pyautogui.click(x=339, y=689, button='left')
 
         time.sleep(1)
         pyperclip.copy(markdownProperties['content'])

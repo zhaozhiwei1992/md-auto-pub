@@ -1,5 +1,5 @@
 """
-自定义pusher, 继承core.AbstractPusher
+自定义知乎, Pusher
 """
 from selenium import webdriver
 import json
@@ -16,7 +16,7 @@ class Pusher:
     def pushExt(self, config, markdownProperties):
         driver = webdriver.Firefox()
         # 控制网站打开超时，否则get会阻塞
-        driver.set_page_load_timeout(2)
+        driver.set_page_load_timeout(5)
         self.loginAndForward(driver, config.get("URL"))
         self.write(driver, config, markdownProperties)
         # 关掉浏览器
@@ -71,12 +71,14 @@ class Pusher:
         transMdUrl = config.get("TRANS_MD")
         pyperclip.copy(markdownProperties['content'])
         # 打开转换页面 https://md.phodal.com/
+        js = "window.open('{}','_blank');"
+        time.sleep(2)
         try:
-            driver.get(transMdUrl)
+            driver.execute_script(js.format(transMdUrl))
         except TimeoutException:
             print('timeout')
         # 写入左侧页面 x=182, y=263
-        time.sleep(1)
+        time.sleep(2)
         pyautogui.click(x=182, y=263, button='left')
         time.sleep(2)
         # 全选 /删除

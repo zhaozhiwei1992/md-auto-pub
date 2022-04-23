@@ -68,11 +68,11 @@ pip install -r requirements.txt
 
 - [ ] 知乎 
 
-- [ ] CSDN 
+- [x] CSDN 
 
 - [ ] 豆瓣日志 
 
-- [ ] segmentfault 
+- [x] segmentfault 
 
 - [x] 开源中国 
 
@@ -128,3 +128,7 @@ core目录下增加同名目录如cnblog, 同时增加文件Pusher.py
 ctrl+v, 通过pyperclip实现
 
 不过这里pyperclip.paste不管用，目前先用autogui的hotkey直接搞定
+
+## 知乎这类不能直接录入markdown的怎么整?
+
+可以参考代码逻辑，转换后写入, 适用与 豆瓣, 公众号等
