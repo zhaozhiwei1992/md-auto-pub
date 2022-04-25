@@ -71,10 +71,9 @@ class Pusher:
         time.sleep(3)
         pyautogui.click(x=1021, y=186, button='left')
 
-        # 标题 x=119, y=230
-        # 会自动定位
-        # time.sleep(3)
-        # pyautogui.click(x=176, y=163, button='left')
+        # 标题 x=210, y=233
+        time.sleep(3)
+        pyautogui.click(x=210, y=233, button='left')
         time.sleep(2)
         pyperclip.copy(markdownProperties['title'])
 
@@ -101,6 +100,8 @@ class Pusher:
         pyautogui.hotkey('ctrl', 'v')
         time.sleep(2)
         pyautogui.hotkey('enter')
+        # 这里留点时间30s, 可以加其它标签
+        # time.sleep(30)
 
         # 内容区 x=339, y=689
         time.sleep(3)
@@ -115,6 +116,6 @@ class Pusher:
         time.sleep(2)
         pyautogui.click(x=1501, y=153, button='left')
 
-        # 确认发布 x=1396, y=592
+        # 确认发布 x=1384, y=624
         time.sleep(2)
-        pyautogui.click(x=1396, y=592, button='left')
+        pyautogui.click(x=1384, y=624, button='left')

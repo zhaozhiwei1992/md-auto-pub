@@ -18,7 +18,8 @@ class Pusher:
         self.write(config, markdownProperties)
         # 关掉浏览器 20s后
         time.sleep(20)
-        driver.close()
+        # driver.close()
+        pyautogui.hotkey('alt', 'f4')
         time.sleep(10)
 
     def loginAndForward(self, driver, url):
@@ -79,8 +80,8 @@ class Pusher:
 
         # 通过pyautogui获取到提交按钮, 点击发布
         time.sleep(3)
-        # 发布文章 1303, 424
-        pyautogui.click(x=1303, y=424, button='left')
-        # 确认发布 1295, 507
+        # 发布文章 x=1328, y=276
+        pyautogui.click(x=1328, y=276, button='left')
+        # 确认发布 x=1288, y=505
         time.sleep(3)
-        pyautogui.click(x=1295, y=507, button='left')
+        pyautogui.click(x=1288, y=505, button='left')

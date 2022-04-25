@@ -56,15 +56,14 @@ class Pusher:
     # 这部分根据实际情况调整坐标
     def write(self, config, markdownProperties):
         time.sleep(3)
-        # 添加新随笔
-        pyautogui.click(x=1383, y=157, button='left')
+        # 添加新随笔 x=1378, y=154
+        pyautogui.click(x=1378, y=154, button='left')
         # pyautogui.click(writeLocation)
 
-        # 通过pyautogui 定位到标题, 写入内容
+        # 通过pyautogui 定位到标题, x=378, y=404
         time.sleep(3)
-        pyautogui.click(x=233, y=399, button='left')
+        pyautogui.click(x=378, y=404, button='left')
 
-        # 删除Backspace
         time.sleep(1)
         pyperclip.copy(markdownProperties['title'])
 

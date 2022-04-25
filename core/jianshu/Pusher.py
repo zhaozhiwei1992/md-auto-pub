@@ -7,6 +7,7 @@ import os
 import time
 import pyautogui
 import pyperclip
+from selenium.common.exceptions import TimeoutException
 
 
 class Pusher:
@@ -14,6 +15,7 @@ class Pusher:
     # 扩展实现入口
     def pushExt(self, config, markdownProperties):
         driver = webdriver.Firefox()
+        driver.set_page_load_timeout(5)
         self.loginAndForward(driver, config.get("URL"))
         self.write(config, markdownProperties)
         # 关掉浏览器
@@ -44,16 +46,19 @@ class Pusher:
             with open(cookiePath, 'w') as f:
                 f.write(jsonCookies)
         else:
-            driver.get(url)
-            # 删掉cookies
-            driver.delete_all_cookies()
-            with open(cookiePath, 'r', encoding='utf8') as f:
-                cookies = json.load(f)
-            for cookie in cookies:
-                driver.add_cookie(cookie)
-                # print(cookie)
-            # 用保存的cookie访问
-            driver.get(url)
+            try:
+                driver.get(url)
+                # 删掉cookies
+                driver.delete_all_cookies()
+                with open(cookiePath, 'r', encoding='utf8') as f:
+                    cookies = json.load(f)
+                for cookie in cookies:
+                    driver.add_cookie(cookie)
+                    # print(cookie)
+                # 用保存的cookie访问
+                driver.get(url)
+            except TimeoutException:
+                print('timeout')
 
     # 录入内容,
     def write(self, config, markdownProperties):
@@ -96,5 +101,6 @@ class Pusher:
         # pyperclip.paste()
         pyautogui.hotkey('ctrl', 'v')
 
-        # 通过pyautogui获取到提交按钮, 点击发布
-        pyautogui.click(x=365, y=159, button='left')
+        # 点击发布x=1538, y=209
+        time.sleep(3)
+        pyautogui.click(x=1538, y=209, button='left')
