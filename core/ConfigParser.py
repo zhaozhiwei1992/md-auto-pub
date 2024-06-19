@@ -1,8 +1,8 @@
 """
 解析json配置信息, 转换为字典
 """
-import os
 import json
+import os
 
 
 class ConfigParser:
@@ -16,25 +16,30 @@ class ConfigParser:
     #     "WRITE_URL": "https://zhuanlan.zhihu.com/write"
     # }
     def parse(self, path):
-        with open(path, 'r') as loadFile:
-            jsonObj = json.load(loadFile)
-            if jsonObj.get("ENABLE"):
-                return jsonObj
-            else:
-                return {}
+        try:
+            with open(path, 'r', encoding='utf-8') as loadFile:
+                jsonObj = json.load(loadFile)
+                if jsonObj.get("ENABLE"):
+                    return jsonObj
+        except Exception as e:
+            print(f"Error parsing file {path}: {e}")
+        return {}
 
     def trans(self):
         allConfig = {}
         # 遍历目录, 返回所有有效配置
-
         curPath = os.path.abspath(os.path.dirname(__file__))
-        # MdAutoPub，也就是项目的根路径
-        rootPath = curPath[:curPath.find("MdAutoPub/") + len("MdAutoPub/")]
-        # 获取xx.md文件的路径
-        confPath = os.path.abspath(rootPath + 'conf/')
+        # 获取项目根路径
+        rootPath = curPath[:curPath.find("md-auto-pub/") + len("md-auto-pub/")]
+        # 获取配置文件的路径
+        confPath = os.path.abspath(os.path.join(rootPath, 'conf'))
+
         for filename in os.listdir(confPath):
-            obj = self.parse(confPath + "/" + filename)
-            if len(obj.keys()) > 0:
-                # 去掉文件名后缀.json
-                allConfig[filename[:-5]] = obj
+            if filename.endswith(".json"):
+                filePath = os.path.join(confPath, filename)
+                obj = self.parse(filePath)
+                if obj:
+                    # 去掉文件名后缀.json
+                    allConfig[filename[:-5]] = obj
+
         return allConfig

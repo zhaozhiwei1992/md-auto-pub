@@ -11,53 +11,11 @@ import pyperclip
 
 class Pusher:
 
-    # 扩展实现入口
-    def pushExt(self, config, markdownProperties):
-        driver = webdriver.Firefox()
-        self.loginAndForward(driver, config.get("URL"))
-        self.write(config, markdownProperties)
-        # 关掉浏览器 20s后
-        time.sleep(20)
-        # driver.close()
-        pyautogui.hotkey('alt', 'f4')
-        time.sleep(10)
-
-    @staticmethod
-    def loginAndForward(driver, url):
-
-        curPath = os.path.abspath(os.path.dirname(__file__))
-        # MdAutoPub，也就是项目的根路径
-        rootPath = curPath[:curPath.find("MdAutoPub/") + len("MdAutoPub/")]
-        cookiePath = os.path.abspath(rootPath + 'cookie/juejin_cookie.json')
-
-        # 如果文件不存在则先登录
-        if not os.path.exists(cookiePath):
-            driver.maximize_window()
-            driver.get(url)
-
-            # 睡30秒等你登录
-            time.sleep(30)
-
-            dictCookies = driver.get_cookies()
-            jsonCookies = json.dumps(dictCookies)
-            # print(jsonCookies)
-            with open(cookiePath, 'w') as f:
-                f.write(jsonCookies)
-        else:
-            driver.get(url)
-            # 删掉cookies
-            driver.delete_all_cookies()
-            with open(cookiePath, 'r', encoding='utf8') as f:
-                cookies = json.load(f)
-            for cookie in cookies:
-                driver.add_cookie(cookie)
-                # print(cookie)
-            # 用保存的cookie访问
-            driver.get(url)
+    def getCookiePath(self, rootPath):
+        return os.path.abspath(rootPath + 'cookie/juejin_cookie.json')
 
     # 录入内容,
     # 这部分根据实际情况调整坐标
-    @staticmethod
     def write(config, markdownProperties):
         time.sleep(3)
         # 写文章 318, 339

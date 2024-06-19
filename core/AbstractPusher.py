@@ -3,12 +3,20 @@
 
 自定义各个网站的发布流程
 """
+import importlib
+import json
+import os
+import time
+
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+
 from core.ConfigParser import ConfigParser
 from core.MarkdownParser import MarkdownParser
-import core.jianshu.Pusher as JianshuPusher
-import core.zhihu.Pusher as ZhihuPusher
-import core.cnblog.Pusher as CnblogPusher
-import importlib
+
+
+def getCookiePath(param):
+    pass
 
 
 class AbstractPusher:
@@ -18,44 +26,65 @@ class AbstractPusher:
         # 获取要发布的markdown文件, 并解析处理
         markdownDict = MarkdownParser().parse(path)
 
-        # 解析conf获取登录信息,遍历发布, 如zhihu.json, 处理ENABLE==true的
+        # 解析conf获取登录信息, 遍历发布, 如zhihu.json, 处理ENABLE==true的
         # 返回所有网站配置信息
         allConfig = ConfigParser().trans()
 
-        # 发布, 遍历返回的key信息, key作为目录名称,分别去各个目录找到处理方式
-        for item in allConfig.items():
-            print('item中key %s value %s' % (item[0], item[1]))
+        # 发布, 遍历返回的key信息, key作为目录名称, 分别去各个目录找到处理方式
+        for platform, config in allConfig.items():
+            print(f'Platform: {platform}, Config: {config}')
 
-            # key, 根据key找到目录下的Pusher作为入口, 没有反射只能判断了
-            # if item[0] == "zhihu":
-            #     ZhihuPusher.Pusher().pushExt(item[1], markdownDict)
-            # elif item[0] == "cnblog":
-            #     CnblogPusher.Pusher().pushExt(item[1], markdownDict)
-            # elif item[0] == "jianshu":
-            #     JianshuPusher.Pusher().pushExt(item[1], markdownDict)
-            # else:
-            #     print("暂不支持", item[0])
-
-            # 动态导入
-            moduleSrc = "core." + item[0] + ".Pusher"
-            # 动态导入模块，此时，lib就相当于core.jianshu.Pusher
-            lib = importlib.import_module(moduleSrc)
-            # 动态导入函数
-            lib.Pusher().pushExt(item[1], markdownDict)
+            # 动态导入模块和函数
+            try:
+                moduleSrc = f"core.{platform}.Pusher"
+                lib = importlib.import_module(moduleSrc)
+                lib.Pusher().pushExt(config, markdownDict)
+            except ModuleNotFoundError:
+                print(f"暂不支持 {platform}")
 
     # 扩展实现该方法
-    def pushExt(self):
-        # 登录
-        self.login()
-        # 跳转不同发布界面
-        self.forward()
-        # 填入文章内容,并根据不同网站自定义发布
-        self.write()
-        self.submit()
+    def pushExt(self, config, markdownProperties):
+        # # 登录
+        # self.login(config)
+        # # 跳转不同发布界面
+        # self.forward()
+        # # 填入文章内容, 并根据不同网站自定义发布
+        # self.write(config, markdownProperties)
+        # self.submit()
+        driver = webdriver.Chrome(executable_path="/tmp/chromedriver")
+        driver.set_page_load_timeout(10)
+        self.loginAndForward(driver, config.get("URL"))
+        self.write(driver, config, markdownProperties)
+        # 关掉浏览器
+        time.sleep(10)
+        driver.quit()
 
     # 登录并跳转
     def loginAndForward(self, driver, url):
-        pass
+        curPath = os.path.abspath(os.path.dirname(__file__))
+        rootPath = curPath[:curPath.find("md-auto-pub/") + len("md-auto-pub/")]
+        cookiePath = self.getCookiePath(rootPath)
+
+        if not os.path.exists(cookiePath):
+            driver.maximize_window()
+            driver.get(url)
+            # 等待用户手动登录
+            time.sleep(30)
+            dictCookies = driver.get_cookies()
+            jsonCookies = json.dumps(dictCookies)
+            with open(cookiePath, 'w') as f:
+                f.write(jsonCookies)
+        else:
+            try:
+                driver.get(url)
+                driver.delete_all_cookies()
+                with open(cookiePath, 'r', encoding='utf8') as f:
+                    cookies = json.load(f)
+                for cookie in cookies:
+                    driver.add_cookie(cookie)
+                driver.get(url)
+            except TimeoutException:
+                print('timeout')
 
     def write(self, config, markdownProperties):
         pass
