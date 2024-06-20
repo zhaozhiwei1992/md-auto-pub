@@ -76,11 +76,11 @@ pip install -r requirements.txt
 
 - [ ] 豆瓣日志 
 
-- [x] segmentfault 
+- [ ] segmentfault 
 
 - [x] 开源中国 
 
-- [x] 掘金 
+- [ ] 掘金 
 
 - [ ] 今日头条 
 
