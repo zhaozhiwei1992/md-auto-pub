@@ -51,7 +51,7 @@ class AbstractPusher:
         # # 填入文章内容, 并根据不同网站自定义发布
         # self.write(config, markdownProperties)
         # self.submit()
-        driver = webdriver.Chrome(executable_path="/tmp/chromedriver")
+        driver = webdriver.Chrome(executable_path="/home/zhaozhiwei/workspace/md-auto-pub/driver/chromedriver")
         driver.set_page_load_timeout(10)
         self.loginAndForward(driver, config.get("URL"))
         self.write(driver, config, markdownProperties)
