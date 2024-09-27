@@ -51,7 +51,14 @@ class AbstractPusher:
         # # 填入文章内容, 并根据不同网站自定义发布
         # self.write(config, markdownProperties)
         # self.submit()
-        driver = webdriver.Chrome(executable_path="/home/zhaozhiwei/workspace/md-auto-pub/driver/chromedriver")
+        # 获取当前脚本所在的目录
+        curPath = os.path.dirname(os.path.abspath(__file__))
+        # 获取项目根路径
+        rootPath = curPath[:curPath.find("md-auto-pub/") + len("md-auto-pub/")]
+        # 获取markdown文件的路径
+        driverPath = os.path.abspath(os.path.join(rootPath, 'driver', 'chromedriver'))
+        options = webdriver.ChromeOptions()
+        driver = webdriver.Chrome(options=options)
         driver.set_page_load_timeout(10)
         self.loginAndForward(driver, config.get("URL"))
         self.write(driver, config, markdownProperties)
