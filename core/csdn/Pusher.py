@@ -15,7 +15,7 @@ from core.AbstractPusher import AbstractPusher
 class Pusher(AbstractPusher):
 
     def getCookiePath(self, rootPath):
-        return os.path.abspath(rootPath + 'cookie/csdn_cookie.json')
+        return os.path.abspath(os.path.join(rootPath, 'csdn_cookie.json'))
 
     def write(self, driver, config, markdownProperties):
         try:

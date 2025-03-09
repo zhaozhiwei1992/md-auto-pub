@@ -28,9 +28,8 @@ class ConfigParser:
     def trans(self):
         allConfig = {}
         # 遍历目录, 返回所有有效配置
-        curPath = os.path.abspath(os.path.dirname(__file__))
         # 获取项目根路径
-        rootPath = curPath[:curPath.find("md-auto-pub/") + len("md-auto-pub/")]
+        rootPath = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         # 获取配置文件的路径
         confPath = os.path.abspath(os.path.join(rootPath, 'conf'))
 

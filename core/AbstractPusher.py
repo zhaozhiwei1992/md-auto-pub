@@ -15,11 +15,10 @@ from core.ConfigParser import ConfigParser
 from core.MarkdownParser import MarkdownParser
 
 
-def getCookiePath(param):
-    pass
-
-
 class AbstractPusher:
+
+    def getCookiePath(self, rootPath):
+        pass
 
     # 博客发布核心入口
     def push(self, path):
@@ -30,6 +29,17 @@ class AbstractPusher:
         # 返回所有网站配置信息
         allConfig = ConfigParser().trans()
 
+        options = webdriver.ChromeOptions()                  # 创建一个配置对象
+
+        # options.add_argument('--headless')                 # 开启无界面模式
+        options.add_argument("--disable-gpu")              # 禁用gpu
+        # options.add_argument('--user-agent=Mozilla/5.0 HAHA')  # 配置对象添加替换User-Agent的命令
+        # options.add_argument('--window-size=1366,768')    # 设置浏览器分辨率（窗口大小）
+        options.add_argument('--start-maximized')         # 最大化运行（全屏窗口）,不设置，取元素会报错
+        # options.add_argument('--disable-infobars')        # 禁用浏览器正在被自动化程序控制的提示
+        # options.add_argument('--incognito')               # 隐身模式（无痕模式）
+        # options.add_argument('--disable-javascript')      # 禁用javascript
+
         # 发布, 遍历返回的key信息, key作为目录名称, 分别去各个目录找到处理方式
         for platform, config in allConfig.items():
             print(f'Platform: {platform}, Config: {config}')
@@ -38,39 +48,32 @@ class AbstractPusher:
             try:
                 moduleSrc = f"core.{platform}.Pusher"
                 lib = importlib.import_module(moduleSrc)
-                lib.Pusher().pushExt(config, markdownDict)
+                # driver = webdriver.Chrome(chrome_options=options, executable_path="/home/zhaozhiwei/workspace/md-auto-pub/driver/chromedriver")
+                driver = webdriver.Chrome(chrome_options=options)
+                driver.set_page_load_timeout(10)
+                lib.Pusher().pushExt(config, markdownDict, driver)
+                # 关掉浏览器
+                time.sleep(10)
+                driver.quit()
             except ModuleNotFoundError:
                 print(f"暂不支持 {platform}")
 
     # 扩展实现该方法
-    def pushExt(self, config, markdownProperties):
-        # # 登录
-        # self.login(config)
-        # # 跳转不同发布界面
-        # self.forward()
-        # # 填入文章内容, 并根据不同网站自定义发布
-        # self.write(config, markdownProperties)
-        # self.submit()
-        # 获取当前脚本所在的目录
-        curPath = os.path.dirname(os.path.abspath(__file__))
-        # 获取项目根路径
-        rootPath = curPath[:curPath.find("md-auto-pub/") + len("md-auto-pub/")]
-        # 获取markdown文件的路径
-        driverPath = os.path.abspath(os.path.join(rootPath, 'driver', 'chromedriver'))
-        options = webdriver.ChromeOptions()
-        driver = webdriver.Chrome(options=options)
-        driver.set_page_load_timeout(10)
+    def pushExt(self, config, markdownProperties, driver):
         self.loginAndForward(driver, config.get("URL"))
         self.write(driver, config, markdownProperties)
-        # 关掉浏览器
-        time.sleep(10)
-        driver.quit()
 
     # 登录并跳转
     def loginAndForward(self, driver, url):
-        curPath = os.path.abspath(os.path.dirname(__file__))
-        rootPath = curPath[:curPath.find("md-auto-pub/") + len("md-auto-pub/")]
-        cookiePath = self.getCookiePath(rootPath)
+        rootPath = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+        cookiePath = self.getCookiePath(os.path.join(rootPath, "cookie"))
+
+        # 查看文件修改日期是否超过10分钟, 如果超过则重新登录
+        if os.path.exists(cookiePath):
+            mtime = os.path.getmtime(cookiePath)
+            now = time.time()
+            if now - mtime > 600:
+                os.remove(cookiePath)
 
         if not os.path.exists(cookiePath):
             driver.maximize_window()
@@ -92,6 +95,8 @@ class AbstractPusher:
                 driver.get(url)
             except TimeoutException:
                 print('timeout')
+            except Exception as e:
+                print(f'An error occurred: {e}')
 
-    def write(self, config, markdownProperties):
+    def write(self, driver, config, markdownProperties):
         pass

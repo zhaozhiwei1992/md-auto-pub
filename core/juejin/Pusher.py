@@ -15,7 +15,7 @@ from core.AbstractPusher import AbstractPusher
 class Pusher(AbstractPusher):
 
     def getCookiePath(self, rootPath):
-        return os.path.abspath(rootPath + 'cookie/juejin_cookie.json')
+        return os.path.abspath(os.path.join(rootPath, 'juejin_cookie.json'))
 
     def write(self, driver, config, markdownProperties):
         # tab键到内容

@@ -14,7 +14,7 @@ from core.AbstractPusher import AbstractPusher
 class Pusher(AbstractPusher):
 
     def getCookiePath(self, rootPath):
-        return os.path.abspath(rootPath + 'cookie/cnblog_cookie.json')
+        return os.path.abspath(os.path.join(rootPath, 'cnblog_cookie.json'))
 
     def write(self, driver, config, markdownProperties):
         try:
@@ -32,11 +32,6 @@ class Pusher(AbstractPusher):
             content_input.clear()
             content_input.send_keys(markdownProperties['content'])
 
-            # 添加标签
-            # tag_input = WebDriverWait(driver, 10).until(
-            #     EC.presence_of_element_located((By.XPATH, "//input[@class='publishBtn']"))
-            # )
-
             # 点击发布按钮
             publish_button = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located((By.XPATH, "//button[@data-el-locator='publishBtn']"))
@@ -45,3 +40,5 @@ class Pusher(AbstractPusher):
 
         except TimeoutException:
             print('操作超时，请检查元素选择器是否正确')
+        except Exception as e:
+            print(f'An error occurred: {e}')

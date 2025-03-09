@@ -11,7 +11,7 @@ import pyperclip
 class Pusher:
 
     def getCookiePath(self, rootPath):
-        return os.path.abspath(rootPath + 'cookie/oschina_cookie.json')
+        return os.path.abspath(os.path.join(rootPath, 'oschina_cookie.json'))
 
     # 录入内容,
     # 这部分根据实际情况调整坐标
