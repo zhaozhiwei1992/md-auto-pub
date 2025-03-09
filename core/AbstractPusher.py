@@ -21,7 +21,7 @@ class AbstractPusher:
         pass
 
     # 博客发布核心入口
-    def push(self, path):
+    def push(self, path, pform):
         # 获取要发布的markdown文件, 并解析处理
         markdownDict = MarkdownParser().parse(path)
 
@@ -42,6 +42,8 @@ class AbstractPusher:
 
         # 发布, 遍历返回的key信息, key作为目录名称, 分别去各个目录找到处理方式
         for platform, config in allConfig.items():
+            if platform != pform:
+                continue
             print(f'Platform: {platform}, Config: {config}')
 
             # 动态导入模块和函数

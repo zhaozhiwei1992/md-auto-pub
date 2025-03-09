@@ -11,9 +11,8 @@ import re
 class MarkdownParser:
 
     def parse(self, fileName):
-        curPath = os.path.abspath(os.path.dirname(__file__))
         # 获取项目根路径
-        rootPath = curPath[:curPath.find("md-auto-pub/") + len("md-auto-pub/")]
+        rootPath = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
         # 获取markdown文件的路径
         markdownPath = os.path.abspath(os.path.join(rootPath, 'markdown', fileName))
 
