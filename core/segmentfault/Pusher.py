@@ -2,6 +2,7 @@
 思否自动提交实现
 """
 import os
+import time
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
@@ -25,9 +26,10 @@ class Pusher(AbstractPusher):
             title_input.clear()
             title_input.send_keys(markdownProperties['title'])
 
+            time.sleep(5)
             # 输入内容
             content_input = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.XPATH, '//*[@id="__next"]/div[3]/div[2]/div/div/div/div[1]/div[2]/div[1]/div[3]/div/div/div[1]/textarea'))
+                EC.presence_of_element_located((By.TAG_NAME, 'textarea'))
             )
             content_input.clear()
             content_input.send_keys(markdownProperties['content'])
