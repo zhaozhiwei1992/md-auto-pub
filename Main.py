@@ -3,7 +3,7 @@
 
 启动入口
 
-python Main.py xxx.md
+python Main.py xxx.md platform
 """
 from core.AbstractPusher import AbstractPusher
 import sys
