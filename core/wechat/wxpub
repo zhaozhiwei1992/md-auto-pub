@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+"""
+微信公众号发布快捷脚本
+"""
+
+import os
+import sys
+
+# 获取 workspace 路径
+WORKSPACE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PUBLISHER = os.path.join(WORKSPACE, "tools", "wechat_mp_publisher.py")
+
+# 从环境变量读取默认配置
+DEFAULT_APPID = os.environ.get("WECHAT_APPID", "yourappid")
+DEFAULT_SECRET = os.environ.get("WECHAT_SECRET", "yoursecret")
+DEFAULT_AUTHOR = os.environ.get("WECHAT_AUTHOR", "离线请留言")
+
+if __name__ == "__main__":
+    # 构建命令
+    import subprocess
+
+    # 检查参数
+    if len(sys.argv) < 2:
+        print("使用方法: wxpub <markdown文件> [--cover 封面图] [--author 作者] [--dry-run]")
+        print(f"\n默认配置:")
+        print(f"  AppID: {DEFAULT_APPID}")
+        print(f"  Author: {DEFAULT_AUTHOR}")
+        print(f"\n环境变量: WECHAT_APPID, WECHAT_SECRET, WECHAT_AUTHOR")
+        sys.exit(1)
+
+    cmd = [sys.executable, PUBLISHER]
+    cmd.append(sys.argv[1])
+    cmd.extend(["--appid", DEFAULT_APPID, "--secret", DEFAULT_SECRET, "--author", DEFAULT_AUTHOR])
+
+    # 解析其他参数
+    for i in range(2, len(sys.argv)):
+        cmd.append(sys.argv[i])
+
+    # 执行
+    result = subprocess.run(cmd)
+    sys.exit(result.returncode)

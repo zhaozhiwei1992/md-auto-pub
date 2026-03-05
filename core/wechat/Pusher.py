@@ -1,5 +1,5 @@
 """
-自定义博客园 pusher, 继承core.AbstractPusher
+微信公众号推送，有接口，这个不用
 """
 import os
 
